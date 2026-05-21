@@ -28,3 +28,10 @@ This repository contains Part 4 of the D2C Customer Churn Intelligence & Retenti
 - **Pydantic Validation:** Strict type enforcement on all 25 input features.
 - **Custom Threshold:** The model returns a dynamic boolean `churn_risk_flag` calculated against the heavily-researched threshold of `0.40` (optimized for Recall).
 - **Batch Processing:** Highly optimized `/batch_predict` endpoint to avoid thousands of individual API calls during nightly CRM syncs.
+
+## Docker Support
+This API includes a Dockerfile for exact reproducibility. To build and run:
+```bash
+docker build -t churn-api .
+docker run -p 8000:8000 churn-api
+```

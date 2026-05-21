@@ -42,10 +42,10 @@ def test_predict_single_customer():
     assert response.status_code == 200
     data = response.json()
     assert "churn_probability" in data
-    assert "churn_risk_flag" in data
+    assert "predicted_class" in data
+    assert "risk_level" in data
     assert "risk_explanation" in data
     assert data["customer_id"] == "CUST_TEST"
-    assert data["threshold_used"] == 0.40
 
 def test_batch_predict():
     payload = [{

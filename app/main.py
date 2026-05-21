@@ -59,8 +59,8 @@ class CustomerFeatures(BaseModel):
 class PredictionResponse(BaseModel):
     customer_id: str
     churn_probability: float
-    churn_risk_flag: bool
-    threshold_used: float
+    predicted_class: int
+    risk_level: str
     risk_explanation: str
 
 class BatchPredictionResponse(BaseModel):
@@ -88,13 +88,14 @@ def predict_churn(customer: CustomerFeatures):
         
         # Apply custom threshold
         risk_flag = bool(prob >= OPTIMAL_THRESHOLD)
+        level = "high" if risk_flag else "low"
         explanation = "High risk of churn. Priority intervention required." if risk_flag else "Low risk of churn. Monitor routinely."
         
         return PredictionResponse(
             customer_id=cust_id,
             churn_probability=round(prob, 4),
-            churn_risk_flag=risk_flag,
-            threshold_used=OPTIMAL_THRESHOLD,
+            predicted_class=int(risk_flag),
+            risk_level=level,
             risk_explanation=explanation
         )
     except Exception as e:
@@ -120,12 +121,13 @@ def predict_churn_batch(customers: List[CustomerFeatures]):
         results = []
         for cid, prob in zip(cust_ids, probs):
             flag = bool(prob >= OPTIMAL_THRESHOLD)
+            level = "high" if flag else "low"
             exp = "High risk of churn. Priority intervention required." if flag else "Low risk of churn. Monitor routinely."
             results.append(PredictionResponse(
                 customer_id=cid,
                 churn_probability=round(prob, 4),
-                churn_risk_flag=flag,
-                threshold_used=OPTIMAL_THRESHOLD,
+                predicted_class=int(flag),
+                risk_level=level,
                 risk_explanation=exp
             ))
             
