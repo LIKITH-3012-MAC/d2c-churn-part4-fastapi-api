@@ -79,7 +79,7 @@ curl -X POST "http://localhost:8000/predict" \
 ---
 
 ## 3. Batch Prediction
-**Endpoint:** `/predict_batch`
+**Endpoint:** `/batch_predict`
 **Method:** `POST`
 **Description:** Predicts churn for multiple customers in a single request. Highly optimized for CRM nightly syncs.
 

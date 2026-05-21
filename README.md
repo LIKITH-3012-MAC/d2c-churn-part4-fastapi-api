@@ -4,7 +4,7 @@
 This repository contains Part 4 of the D2C Customer Churn Intelligence & Retention API Capstone. The objective is to deploy the Champion Machine Learning model trained in Part 3 as a REST API that the marketing CRM can query to identify at-risk customers.
 
 ## File Structure
-- `app.py`: FastAPI application containing the `/health`, `/predict`, and `/predict_batch` endpoints.
+- `app.py`: FastAPI application containing the `/health`, `/predict`, and `/batch_predict` endpoints.
 - `model.pkl`: The serialized `scikit-learn` Random Forest Champion model imported from Part 3.
 - `api_spec.md`: Detailed documentation on the API endpoints, request schemas, response formats, and cURL examples.
 - `integration_guide.md`: Architectural guidance for the CRM team on how to query the batch endpoint nightly and trigger downstream retention workflows.
@@ -27,4 +27,4 @@ This repository contains Part 4 of the D2C Customer Churn Intelligence & Retenti
 ## Features
 - **Pydantic Validation:** Strict type enforcement on all 25 input features.
 - **Custom Threshold:** The model returns a dynamic boolean `churn_risk_flag` calculated against the heavily-researched threshold of `0.40` (optimized for Recall).
-- **Batch Processing:** Highly optimized `/predict_batch` endpoint to avoid thousands of individual API calls during nightly CRM syncs.
+- **Batch Processing:** Highly optimized `/batch_predict` endpoint to avoid thousands of individual API calls during nightly CRM syncs.

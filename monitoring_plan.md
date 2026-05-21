@@ -17,4 +17,13 @@ The relationship between the features and the actual churn label may change over
 ## 3. API Performance Monitoring
 - **Metric:** P99 Latency and Error Rates (422 and 500 status codes).
 - **Tooling:** Prometheus and Grafana.
-- **Alert:** PagerDuty alert if P99 latency exceeds 500ms on the `/predict_batch` endpoint, as this could cause timeouts in the CRM ETL sync.
+- **Alert:** PagerDuty alert if P99 latency exceeds 500ms on the `/batch_predict` endpoint, as this could cause timeouts in the CRM ETL sync.
+
+## 4. Responsible Use Guidelines
+### How the API Should Be Used
+- The `churn_risk_flag` is intended to route "At-Risk" customers into automated CRM retention funnels (e.g., offering a 15% discount email sequence or flagging for customer success outreach).
+- The `risk_explanation` should be presented to Customer Success agents to provide context before they initiate a manual outreach call.
+
+### How the API Should NOT Be Used
+- **No Service Degradation:** A high churn probability MUST NOT be used to purposefully degrade a customer's service, throttle their bandwidth, or deny them standard support.
+- **No Pricing Discrimination:** The API must not be used to dynamically inflate baseline product prices for loyal customers (price gouging) just because their churn risk is low.

@@ -61,6 +61,7 @@ class PredictionResponse(BaseModel):
     churn_probability: float
     churn_risk_flag: bool
     threshold_used: float
+    risk_explanation: str
 
 class BatchPredictionResponse(BaseModel):
     predictions: List[PredictionResponse]
@@ -87,18 +88,20 @@ def predict_churn(customer: CustomerFeatures):
         
         # Apply custom threshold
         risk_flag = bool(prob >= OPTIMAL_THRESHOLD)
+        explanation = "High risk of churn. Priority intervention required." if risk_flag else "Low risk of churn. Monitor routinely."
         
         return PredictionResponse(
             customer_id=cust_id,
             churn_probability=round(prob, 4),
             churn_risk_flag=risk_flag,
-            threshold_used=OPTIMAL_THRESHOLD
+            threshold_used=OPTIMAL_THRESHOLD,
+            risk_explanation=explanation
         )
     except Exception as e:
         logger.error(f"Prediction error: {e}")
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.post("/predict_batch", response_model=BatchPredictionResponse)
+@app.post("/batch_predict", response_model=BatchPredictionResponse)
 def predict_churn_batch(customers: List[CustomerFeatures]):
     if model is None:
         raise HTTPException(status_code=503, detail="Model is currently unavailable.")
@@ -116,11 +119,14 @@ def predict_churn_batch(customers: List[CustomerFeatures]):
         
         results = []
         for cid, prob in zip(cust_ids, probs):
+            flag = bool(prob >= OPTIMAL_THRESHOLD)
+            exp = "High risk of churn. Priority intervention required." if flag else "Low risk of churn. Monitor routinely."
             results.append(PredictionResponse(
                 customer_id=cid,
                 churn_probability=round(prob, 4),
-                churn_risk_flag=bool(prob >= OPTIMAL_THRESHOLD),
-                threshold_used=OPTIMAL_THRESHOLD
+                churn_risk_flag=flag,
+                threshold_used=OPTIMAL_THRESHOLD,
+                risk_explanation=exp
             ))
             
         return BatchPredictionResponse(predictions=results)
