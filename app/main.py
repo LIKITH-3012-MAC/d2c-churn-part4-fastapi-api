@@ -16,9 +16,11 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Load Model
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_PATH = BASE_DIR / 'model.pkl'
 try:
-    model = joblib.load('model.pkl')
+    model = joblib.load(MODEL_PATH)
     logger.info("Model loaded successfully.")
 except Exception as e:
     logger.error(f"Failed to load model: {e}")
