@@ -1,0 +1,2759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChurnLens AI — Premium 3D Customer Churn Analytics Console</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #f0f4f9;
+            --bg-card: rgba(255, 255, 255, 0.45);
+            --bg-card-hover: rgba(255, 255, 255, 0.65);
+            --border-card: rgba(255, 255, 255, 0.7);
+            
+            /* Neumorphic 3D double shadows */
+            --shadow-3d-out: 8px 8px 20px rgba(166, 180, 200, 0.45), -8px -8px 20px rgba(255, 255, 255, 0.95);
+            --shadow-3d-out-hover: 12px 12px 28px rgba(166, 180, 200, 0.55), -12px -12px 28px rgba(255, 255, 255, 0.98);
+            --shadow-3d-in: inset 3px 3px 7px rgba(166, 180, 200, 0.45), inset -3px -3px 7px rgba(255, 255, 255, 0.95);
+            --shadow-btn-3d: 4px 4px 10px rgba(99, 102, 241, 0.35), -4px -4px 10px rgba(255, 255, 255, 0.9), inset 0 -3px 0 rgba(0,0,0,0.15);
+            --shadow-gauge: 
+                inset 4px 4px 10px rgba(166, 180, 200, 0.4), 
+                inset -4px -4px 10px rgba(255, 255, 255, 0.95),
+                4px 4px 10px rgba(166, 180, 200, 0.15), 
+                -4px -4px 10px rgba(255, 255, 255, 0.95);
+            
+            --color-primary: #8b5cf6; /* Classic Violet */
+            --color-secondary: #6366f1; /* Indigo */
+            --color-success: #10b981; /* Emerald */
+            --color-warning: #f97316; /* Orange */
+            --color-danger: #ef4444; /* Coral Red */
+            
+            --text-main: #1e293b; /* Slate 800 */
+            --text-muted: #475569; /* Slate 600 */
+            --text-dark: #64748b; /* Slate 500 */
+            
+            --bg-input: rgba(240, 243, 248, 0.6);
+            --bg-header: rgba(255, 255, 255, 0.4);
+            --bg-table-header: rgba(240, 243, 248, 0.85);
+            --border-tbl: rgba(0, 0, 0, 0.04);
+            --bg-modal: rgba(255, 255, 255, 0.88);
+            
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        /* Dark Theme Variables override */
+        body.dark-theme {
+            --bg-base: #0b0816;
+            --bg-card: rgba(20, 15, 38, 0.55);
+            --bg-card-hover: rgba(28, 22, 53, 0.75);
+            --border-card: rgba(255, 255, 255, 0.07);
+            
+            /* Neumorphic 3D double shadows in Dark mode */
+            --shadow-3d-out: 8px 8px 20px rgba(3, 2, 7, 0.7), -8px -8px 20px rgba(35, 28, 62, 0.35);
+            --shadow-3d-out-hover: 12px 12px 28px rgba(3, 2, 7, 0.8), -12px -12px 28px rgba(35, 28, 62, 0.45);
+            --shadow-3d-in: inset 3px 3px 7px rgba(3, 2, 7, 0.75), inset -3px -3px 7px rgba(35, 28, 62, 0.35);
+            --shadow-btn-3d: 4px 4px 10px rgba(168, 85, 247, 0.3), -4px -4px 10px rgba(35, 28, 62, 0.4), inset 0 -3px 0 rgba(0,0,0,0.25);
+            --shadow-gauge: 
+                inset 4px 4px 10px rgba(3, 2, 7, 0.75), 
+                inset -4px -4px 10px rgba(35, 28, 62, 0.35),
+                4px 4px 10px rgba(3, 2, 7, 0.3), 
+                -4px -4px 10px rgba(35, 28, 62, 0.3);
+                
+            --color-primary: #a855f7; /* Neon Purple */
+            --color-secondary: #ec4899; /* Cyber Pink */
+            
+            --text-main: #f3f4f6; /* Cool grey */
+            --text-muted: #9ca3af; /* Medium grey */
+            --text-dark: #6b7280; 
+            
+            --bg-input: rgba(255, 255, 255, 0.04);
+            --bg-header: rgba(11, 8, 22, 0.75);
+            --bg-table-header: rgba(20, 15, 38, 0.85);
+            --border-tbl: rgba(255, 255, 255, 0.05);
+            --bg-modal: rgba(20, 15, 38, 0.88);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-primary) #e2e8f0;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        /* Custom scrollbar */
+        *::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        *::-webkit-scrollbar-track {
+            background: var(--bg-base);
+            border-radius: 4px;
+        }
+        *::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+            border: 2px solid var(--bg-base);
+        }
+        *::-webkit-scrollbar-thumb:hover {
+            background-color: var(--color-primary);
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding-bottom: 2rem;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        body.dark-theme {
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.09) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.09) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
+        }
+
+        /* Premium Glass Card Utility with 3D Neumorphic highlight */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-card);
+            border-radius: 24px;
+            box-shadow: var(--shadow-3d-out);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.9);
+            background: var(--bg-card-hover);
+            transform: translateY(-4px) scale(1.002);
+            box-shadow: var(--shadow-3d-out-hover);
+        }
+
+        header {
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-header);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-card);
+            z-index: 100;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-dot {
+            width: 14px;
+            height: 14px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 12px var(--color-primary);
+            position: relative;
+        }
+
+        .logo-dot::after {
+            content: '';
+            position: absolute;
+            top: 2px; left: 2px; width: 4px; height: 4px;
+            background: #ffffff;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+            background: linear-gradient(135deg, var(--text-main) 30%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #guide-btn {
+            box-shadow: 3px 3px 6px rgba(166, 180, 200, 0.2), -3px -3px 6px rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            color: var(--text-main);
+            margin-left: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        body.dark-theme #guide-btn {
+            box-shadow: 3px 3px 6px rgba(3, 2, 7, 0.5), -3px -3px 6px rgba(35, 28, 62, 0.35);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        #guide-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 8px rgba(166, 180, 200, 0.3), -4px -4px 8px rgba(255, 255, 255, 0.9);
+            color: var(--color-primary);
+        }
+
+        #guide-btn:active {
+            transform: translateY(1px);
+            box-shadow: inset 1.5px 1.5px 3px rgba(166, 180, 200, 0.3), inset -1.5px -1.5px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Theme Toggle Button style */
+        #theme-toggle-btn {
+            box-shadow: 2px 2px 5px rgba(166, 180, 200, 0.2), -2px -2px 5px rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            color: var(--text-main);
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0.45rem 1rem;
+            border-radius: 30px;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        body.dark-theme #theme-toggle-btn {
+            box-shadow: 2px 2px 5px rgba(3, 2, 7, 0.5), -2px -2px 5px rgba(35, 28, 62, 0.35);
+            background: rgba(20, 15, 38, 0.65);
+            border-color: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        #theme-toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 3px 3px 7px rgba(166, 180, 200, 0.3), -3px -3px 7px rgba(255, 255, 255, 0.9);
+            color: var(--color-primary);
+        }
+
+        #theme-toggle-btn:active {
+            transform: translateY(1px);
+            box-shadow: inset 1px 1px 3px rgba(166, 180, 200, 0.3);
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            padding: 0.45rem 1rem;
+            border-radius: 30px;
+            box-shadow: 2px 2px 5px rgba(166, 180, 200, 0.15), -2px -2px 5px rgba(255, 255, 255, 0.8);
+            color: var(--text-main);
+        }
+
+        body.dark-theme .status-pill {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 2px 2px 5px rgba(3, 2, 7, 0.5), -2px -2px 5px rgba(35, 28, 62, 0.35);
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #94a3b8;
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .status-indicator.online {
+            background: var(--color-success);
+            box-shadow: 0 0 8px var(--color-success), inset 1px 1px 2px rgba(255,255,255,0.4);
+        }
+
+        .status-indicator.offline {
+            background: var(--color-danger);
+            box-shadow: 0 0 8px var(--color-danger), inset 1px 1px 2px rgba(255,255,255,0.4);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Console Navigation */
+        .console-nav {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.4rem;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            width: fit-content;
+            box-shadow: var(--shadow-3d-in);
+        }
+
+        body.dark-theme .console-nav {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 0.75rem 1.5rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .nav-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        body.dark-theme .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-btn.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            transform: scale(1.02);
+        }
+
+        .tab-panel {
+            display: none;
+            width: 100%;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1100px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel-heading {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            letter-spacing: -0.3px;
+            color: var(--text-main);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 0.75rem;
+            position: relative;
+        }
+
+        body.dark-theme .panel-heading {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .panel-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0; width: 60px; height: 2px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+        }
+
+        /* PERSONA PRESETS CARD */
+        .personas-container {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+        }
+
+        .persona-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .persona-card {
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 1.1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            box-shadow: 4px 4px 10px rgba(166, 180, 200, 0.2), -4px -4px 10px rgba(255, 255, 255, 0.8);
+        }
+
+        body.dark-theme .persona-card {
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 4px 4px 10px rgba(3, 2, 7, 0.5), -4px -4px 10px rgba(35, 28, 62, 0.25);
+        }
+
+        .persona-card::after {
+            content: '';
+            position: absolute;
+            top: 14px; right: 14px; width: 8px; height: 8px;
+            border-radius: 50%;
+        }
+
+        .persona-card.p-low::after { background: var(--color-success); box-shadow: 0 0 6px var(--color-success); }
+        .persona-card.p-med::after { background: var(--color-warning); box-shadow: 0 0 6px var(--color-warning); }
+        .persona-card.p-high::after { background: var(--color-danger); box-shadow: 0 0 6px var(--color-danger); }
+
+        .persona-card:hover {
+            background: rgba(255, 255, 255, 0.85);
+            transform: translateY(-3px);
+            box-shadow: 6px 6px 14px rgba(166, 180, 200, 0.3), -6px -6px 14px rgba(255, 255, 255, 0.95);
+        }
+
+        body.dark-theme .persona-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 6px 6px 14px rgba(3, 2, 7, 0.6), -6px -6px 14px rgba(35, 28, 62, 0.35);
+        }
+
+        .persona-card:active {
+            transform: translateY(0);
+            box-shadow: inset 2px 2px 5px rgba(166, 180, 200, 0.35), inset -2px -2px 5px rgba(255, 255, 255, 0.85);
+        }
+
+        body.dark-theme .persona-card:active {
+            box-shadow: var(--shadow-3d-in);
+        }
+
+        .persona-name {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.4rem;
+        }
+
+        .persona-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.35;
+        }
+
+        /* FORM COMPONENT & INPUTS */
+        .predictor-card {
+            padding: 2rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.6);
+        }
+
+        body.dark-theme .form-section {
+            background: rgba(0, 0, 0, 0.15);
+            box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section-title {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            letter-spacing: 0.2px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .input-label-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .value-bubble {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            box-shadow: 1px 1px 3px rgba(166, 180, 200, 0.1);
+        }
+
+        body.dark-theme .value-bubble {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: rgba(168, 85, 247, 0.2);
+        }
+
+        input[type="text"], select {
+            background: var(--bg-input);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 0.7rem 1rem;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 0.9rem;
+            outline: none;
+            box-shadow: var(--shadow-3d-in);
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus, select:focus {
+            background: var(--bg-card-hover);
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1), 0 0 10px rgba(139, 92, 246, 0.15);
+            border-color: var(--color-primary);
+        }
+
+        /* Tactile 3D Range Sliders */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--bg-input);
+            box-shadow: var(--shadow-3d-in);
+            outline: none;
+            margin: 10px 0;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+            border: 1px solid rgba(166, 180, 200, 0.65);
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(166, 180, 200, 0.5), -2px -2px 5px rgba(255, 255, 255, 0.9);
+            transition: transform 0.15s, background-color 0.15s;
+        }
+
+        body.dark-theme input[type="range"]::-webkit-slider-thumb {
+            background: linear-gradient(135deg, #2a2050 0%, #171035 100%);
+            border-color: rgba(255,255,255,0.06);
+            box-shadow: 2px 2px 5px rgba(3, 2, 7, 0.5), -2px -2px 5px rgba(35, 28, 62, 0.25);
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        /* Pressable 3D Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            color: #ffffff;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-btn-3d);
+            transform: translateY(-2px);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 6px 6px 15px rgba(99, 102, 241, 0.45), -6px -6px 15px rgba(255, 255, 255, 0.95), inset 0 -3px 0 rgba(0,0,0,0.15);
+        }
+
+        body.dark-theme .submit-btn:hover {
+            box-shadow: 6px 6px 15px rgba(168, 85, 247, 0.4), -6px -6px 15px rgba(35, 28, 62, 0.45);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+            box-shadow: 1px 1px 3px rgba(99, 102, 241, 0.2), -1px -1px 3px rgba(255, 255, 255, 0.8), inset 0 2px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* PREDICTION VISUALS PANEL */
+        .results-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: sticky;
+            top: 7rem;
+        }
+
+        .results-card {
+            padding: 2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Embedded Neumorphic Circular Gauge Recess */
+        .gauge-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 1.5rem auto;
+            border-radius: 50%;
+            background: rgba(240, 243, 248, 0.4);
+            box-shadow: var(--shadow-gauge);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body.dark-theme .gauge-wrapper {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .gauge-svg {
+            transform: rotate(-90deg);
+        }
+
+        .gauge-track {
+            fill: none;
+            stroke: rgba(166, 180, 200, 0.15);
+            stroke-width: 14px;
+        }
+
+        body.dark-theme .gauge-track {
+            stroke: rgba(255,255,255,0.02);
+        }
+
+        .gauge-fill {
+            fill: none;
+            stroke: var(--color-primary);
+            stroke-width: 14px;
+            stroke-linecap: round;
+            stroke-dasharray: 502;
+            stroke-dashoffset: 502;
+            transition: stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), stroke 0.5s ease;
+        }
+
+        .gauge-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+        }
+
+        .gauge-percentage {
+            font-family: var(--font-mono);
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1;
+        }
+
+        .gauge-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 5px;
+        }
+
+        /* 3D RISK PILL CARDS */
+        .risk-alert-card {
+            width: 100%;
+            border-radius: 18px;
+            padding: 1.25rem;
+            margin-top: 1rem;
+            border: 1px solid var(--border-card);
+            background: rgba(255, 255, 255, 0.6);
+            text-align: left;
+            box-shadow: 3px 3px 10px rgba(166, 180, 200, 0.2), -3px -3px 10px rgba(255, 255, 255, 0.9);
+            transition: all 0.4s ease;
+        }
+
+        body.dark-theme .risk-alert-card {
+            background: rgba(0, 0, 0, 0.15);
+            box-shadow: 3px 3px 10px rgba(3, 2, 7, 0.5), -3px -3px 10px rgba(35, 28, 62, 0.2);
+        }
+
+        .risk-alert-card.high-risk {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.04);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.15), 4px 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .risk-alert-card.low-risk {
+            border-color: rgba(16, 185, 129, 0.3);
+            background: rgba(16, 185, 129, 0.04);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15), 4px 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .risk-badge {
+            display: inline-block;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .risk-badge.high {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--color-danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .risk-badge.low {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--color-success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .risk-explanation {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+            line-height: 1.45;
+        }
+
+        /* RECOMMENDATIONS */
+        .recs-card {
+            padding: 2rem;
+        }
+
+        .rec-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--border-card);
+            border-radius: 14px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.45;
+            align-items: start;
+            box-shadow: 2px 2px 6px rgba(166, 180, 200, 0.15), -2px -2px 6px rgba(255, 255, 255, 0.85);
+        }
+
+        body.dark-theme .rec-item {
+            background: rgba(255, 255, 255, 0.02);
+            box-shadow: 2px 2px 6px rgba(3, 2, 7, 0.5), -2px -2px 6px rgba(35, 28, 62, 0.25);
+        }
+
+        .rec-icon {
+            font-size: 1.3rem;
+            line-height: 1;
+            filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.1));
+        }
+
+        .rec-content {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .rec-title {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .rec-text {
+            color: var(--text-muted);
+        }
+
+        /* BATCH TAB */
+        .drag-drop-zone {
+            border: 2px dashed rgba(139, 92, 246, 0.35);
+            background: rgba(139, 92, 246, 0.02);
+            border-radius: 20px;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: var(--shadow-3d-in);
+        }
+
+        body.dark-theme .drag-drop-zone {
+            border-color: rgba(168, 85, 247, 0.35);
+            background: rgba(168, 85, 247, 0.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            filter: drop-shadow(1px 2px 3px rgba(166, 180, 200, 0.5));
+        }
+
+        .batch-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 800px) {
+            .batch-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid var(--border-card);
+            box-shadow: var(--shadow-3d-out);
+            border-bottom: 4px solid #cbd5e1;
+        }
+
+        body.dark-theme .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom-color: #3b3064;
+        }
+
+        .stat-val {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0.25rem 0;
+            color: var(--text-main);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        /* DATA TABLE */
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .table-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            max-width: 320px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            padding-left: 2.2rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            outline: none;
+            box-shadow: var(--shadow-3d-in);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.55rem 1rem;
+            font-size: 0.85rem;
+            font-family: var(--font-display);
+            font-weight: 700;
+            border-radius: 10px;
+            border: 1px solid var(--border-card);
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-muted);
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(166, 180, 200, 0.2), -2px -2px 5px rgba(255, 255, 255, 0.8);
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        body.dark-theme .btn-small {
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 2px 2px 5px rgba(3, 2, 7, 0.5), -2px -2px 5px rgba(35, 28, 62, 0.25);
+        }
+
+        .btn-small:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+            box-shadow: 3px 3px 7px rgba(166, 180, 200, 0.25), -3px -3px 7px rgba(255, 255, 255, 0.9);
+        }
+
+        body.dark-theme .btn-small:hover {
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 3px 3px 7px rgba(3, 2, 7, 0.6);
+        }
+
+        .btn-small:active {
+            transform: translateY(0);
+            box-shadow: inset 1px 1px 3px rgba(166, 180, 200, 0.25), inset -1px -1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        body.dark-theme .btn-small:active {
+            box-shadow: var(--shadow-3d-in);
+        }
+
+        .btn-small.primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            box-shadow: 3px 3px 8px rgba(99, 102, 241, 0.3), -3px -3px 8px rgba(255, 255, 255, 0.9);
+        }
+
+        .btn-small.primary:hover {
+            box-shadow: 4px 4px 12px rgba(99, 102, 241, 0.4), -4px -4px 12px rgba(255, 255, 255, 0.95);
+        }
+
+        body.dark-theme .btn-small.primary:hover {
+            box-shadow: 4px 4px 12px rgba(168, 85, 247, 0.4), -4px -4px 12px rgba(35, 28, 62, 0.45);
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: var(--shadow-3d-in);
+            max-height: 450px;
+        }
+
+        body.dark-theme .table-wrapper {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--bg-table-header);
+            color: var(--text-muted);
+            font-family: var(--font-display);
+            font-weight: 700;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-tbl);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-tbl);
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        body.dark-theme tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .pill-table {
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.775rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            display: inline-block;
+        }
+
+        .pill-table.high {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--color-danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .pill-table.low {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--color-success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        /* SIMULATION & INSIGHTS TAB */
+        .simulation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 960px) {
+            .simulation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .insights-card {
+            padding: 2rem;
+        }
+
+        .sim-slider-wrapper {
+            background: rgba(240, 243, 248, 0.5);
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            box-shadow: var(--shadow-3d-in);
+        }
+
+        body.dark-theme .sim-slider-wrapper {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .sim-slider-val {
+            font-family: var(--font-mono);
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: var(--color-secondary);
+            margin: 0.5rem 0;
+        }
+
+        .grid-two-cols {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .grid-two-cols {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            margin-top: 0.75rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-tbl);
+            padding-bottom: 0.6rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .info-item span:first-child {
+            color: var(--text-muted);
+        }
+
+        .info-item span:last-child {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .rules-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 0.75rem;
+        }
+
+        .rule-pill {
+            padding: 1rem;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            line-height: 1.45;
+            box-shadow: 2px 2px 6px rgba(166, 180, 200, 0.1), -2px -2px 6px rgba(255,255,255,0.8);
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--border-card);
+        }
+
+        body.dark-theme .rule-pill {
+            background: rgba(255, 255, 255, 0.02);
+            box-shadow: 2px 2px 6px rgba(3, 2, 7, 0.5), -2px -2px 6px rgba(35, 28, 62, 0.25);
+        }
+
+        .rule-pill.allowed {
+            background: rgba(16, 185, 129, 0.04);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            color: var(--color-success);
+        }
+
+        body.dark-theme .rule-pill.allowed {
+            color: #34d399;
+        }
+
+        .rule-pill.forbidden {
+            background: rgba(239, 68, 68, 0.04);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: var(--color-danger);
+        }
+
+        body.dark-theme .rule-pill.forbidden {
+            color: #f87171;
+        }
+
+        .features-grid-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .feature-item-card {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 0.8rem;
+            box-shadow: 2px 2px 6px rgba(166, 180, 200, 0.1), -2px -2px 6px rgba(255, 255, 255, 0.8);
+        }
+
+        body.dark-theme .feature-item-card {
+            background: rgba(255, 255, 255, 0.02);
+            box-shadow: 2px 2px 6px rgba(3, 2, 7, 0.5), -2px -2px 6px rgba(35, 28, 62, 0.25);
+        }
+
+        .feat-name {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .feat-desc {
+            color: var(--text-muted);
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* 3D Glassmorphic Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 200;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--bg-modal);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border-card);
+            border-radius: 28px;
+            max-width: 720px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-3d-out);
+            transform: translateY(-30px);
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.15);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(139, 92, 246, 0.15);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--color-danger);
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        .guide-section {
+            margin-bottom: 1.75rem;
+        }
+
+        .guide-section h4 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .guide-section p, .guide-section li {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .guide-section ul {
+            margin-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        body.dark-theme footer {
+            border-top-color: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Console -->
+    <header>
+        <div class="logo-container">
+            <span class="logo-dot"></span>
+            <h1>CHURNLENS AI</h1>
+            <button class="btn-small" id="guide-btn" onclick="toggleGuide(true)">
+                📖 User Guide
+            </button>
+        </div>
+        
+        <div class="system-status">
+            <!-- Theme Toggle Switch -->
+            <button id="theme-toggle-btn" onclick="toggleTheme()">
+                🌙 Dark Mode
+            </button>
+
+            <div class="status-pill">
+                <span class="status-indicator" id="health-indicator"></span>
+                <span id="health-label">API Status: Checking...</span>
+            </div>
+            <div class="status-pill">
+                <span>Core: <strong>RandomForest 3D</strong></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Guide Modal Overlay -->
+    <div class="modal-overlay" id="guide-modal" onclick="if(event.target === this) toggleGuide(false)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📖 ChurnLens AI - User & Integration Guide</div>
+                <button class="modal-close-btn" onclick="toggleGuide(false)">&times;</button>
+            </div>
+            
+            <div class="guide-section">
+                <h4>1. Overview</h4>
+                <p>Welcome to ChurnLens AI, a premium predictive dashboard designed for analyzing and intervening in customer churn risk. The system evaluates 26 parameters computed from historical RFM, support tickets, and web behavioral snapshot telemetry to forecast whether a customer is likely to churn in the next 60 days.</p>
+            </div>
+            
+            <div class="guide-section">
+                <h4>2. Single Predictor Tab</h4>
+                <p>Use this tab to evaluate individual customer records manually:</p>
+                <ul>
+                    <li><strong>Persona Presets:</strong> Click one of the profiles (e.g. Active Promoter, Slipping Champion) to instantly auto-fill the forms with sample parameters and submit them.</li>
+                    <li><strong>Feature Inputs:</strong> Tweak variables across Demographics, RFM purchases, Customer Support, and Web Activity. Bubble labels show exact value numbers.</li>
+                    <li><strong>Results Gauge:</strong> The radial circular dial shows Churn Score probability. If it exceeds the threshold, the risk turns <strong>High Risk (Red)</strong>, otherwise <strong>Low Risk (Green)</strong>.</li>
+                    <li><strong>CRM Action Triggers:</strong> Shows concrete recommendations based on integration guides (e.g. suppressed ads, VIP Slack warnings for users with open tickets and spend > $1000).</li>
+                </ul>
+            </div>
+            
+            <div class="guide-section">
+                <h4>3. Batch File Upload Tab</h4>
+                <p>Designed for evaluating multiple user profiles simultaneously (e.g., nightly ETL CRM processing):</p>
+                <ul>
+                    <li><strong>Drag-and-Drop:</strong> Drop a CSV file containing customer columns matching the schema features into the zone.</li>
+                    <li><strong>Overview KPI Cards:</strong> Aggregates metrics including total customers uploaded, average churn probability score, percentage flagged, and <strong>Estimated Revenue at Risk</strong>.</li>
+                    <li><strong>Predictions Table:</strong> Search by ID, filter by risk class, and export results back as a labeled CSV.</li>
+                </ul>
+            </div>
+
+            <div class="guide-section">
+                <h4>4. Model Insights & Simulation</h4>
+                <p>Understand classifier characteristics and customize policies:</p>
+                <ul>
+                    <li><strong>Threshold Slider:</strong> Dynamically change the boundary classification threshold (production default: 0.40) to instantly update labels on single and batch views.</li>
+                    <li><strong>Responsible AI Guidelines:</strong> Approved for WIN-BACK funnels and CRM tags; strictly prohibited for pricing discrimination or throttling service.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Tab Navigation Bar -->
+        <div class="console-nav">
+            <button class="nav-btn active" onclick="switchTab('single-tab', this)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Single Predictor
+            </button>
+            <button class="nav-btn" onclick="switchTab('batch-tab', this)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+                Batch File Upload
+            </button>
+            <button class="nav-btn" onclick="switchTab('insights-tab', this)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                Model & MLOps Insights
+            </button>
+        </div>
+
+        <!-- TAB 1: SINGLE CUSTOMER PREDICTOR -->
+        <div id="single-tab" class="tab-panel active">
+            
+            <!-- Persona Presets Panel -->
+            <div class="glass-card personas-container">
+                <h3 class="panel-heading" style="margin-bottom: 0.5rem; border: none; padding-bottom: 0;">
+                    Sample Customer Presets
+                    <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-left: 0.5rem;">— Click a profile to instantly fill in 3D values</span>
+                </h3>
+                <div class="persona-grid">
+                    <button class="persona-card p-low" onclick="loadPersona('promoter')">
+                        <div class="persona-name">Active Promoter</div>
+                        <div class="persona-desc">Gold VIP. High monetary spend, low recency, frequent visits, very satisfied.</div>
+                    </button>
+                    <button class="persona-card p-high" onclick="loadPersona('bargain')">
+                        <div class="persona-name">Bargain Hunter</div>
+                        <div class="persona-desc">Bronze Tier. High discount rate, high return rate, unresolved support complaints.</div>
+                    </button>
+                    <button class="persona-card p-med" onclick="loadPersona('slipping')">
+                        <div class="persona-name">Slipping Champion</div>
+                        <div class="persona-desc">Platinum VIP. Formerly highly active, but has not visited in 22 days. Activity down.</div>
+                    </button>
+                    <button class="persona-card p-high" onclick="loadPersona('new_inactive')">
+                        <div class="persona-name">New Inactive Lead</div>
+                        <div class="persona-desc">Signed up 35 days ago, zero orders, abandoned cart, high inactivity.</div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                
+                <!-- Input Parameters Column -->
+                <div class="glass-card predictor-card">
+                    <h2 class="panel-heading">Predictor Console</h2>
+                    <form id="churn-form" onsubmit="submitPrediction(event)">
+                        
+                        <!-- Demographics Section -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                1. Demographics & Profile
+                            </h4>
+                            <div class="form-grid">
+                                <div class="input-group">
+                                    <label for="customer_id">Customer ID</label>
+                                    <input type="text" id="customer_id" required value="CUST-7742">
+                                </div>
+                                <div class="input-group">
+                                    <label for="city_tier">City Tier</label>
+                                    <select id="city_tier">
+                                        <option value="Tier 1">Tier 1 (Metro)</option>
+                                        <option value="Tier 2">Tier 2 (Urban)</option>
+                                        <option value="Tier 3">Tier 3 (Semi-Urban)</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="age_group">Age Group</label>
+                                    <select id="age_group">
+                                        <option value="18-24">18-24</option>
+                                        <option value="25-34" selected>25-34</option>
+                                        <option value="35-44">35-44</option>
+                                        <option value="45-54">45-54</option>
+                                        <option value="55+">55+</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="loyalty_tier">Loyalty Tier</label>
+                                    <select id="loyalty_tier">
+                                        <option value="Platinum">Platinum</option>
+                                        <option value="Gold" selected>Gold</option>
+                                        <option value="Silver">Silver</option>
+                                        <option value="Bronze">Bronze</option>
+                                        <option value="None">None</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="acquisition_channel">Acquisition Channel</label>
+                                    <select id="acquisition_channel">
+                                        <option value="Organic" selected>Organic</option>
+                                        <option value="Social Media">Social Media</option>
+                                        <option value="Paid Search">Paid Search</option>
+                                        <option value="Referral">Referral</option>
+                                        <option value="Influencer">Influencer</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="preferred_category">Preferred Category</label>
+                                    <select id="preferred_category">
+                                        <option value="Skin Care" selected>Skin Care</option>
+                                        <option value="Makeup">Makeup</option>
+                                        <option value="Hair Care">Hair Care</option>
+                                        <option value="Fragrance">Fragrance</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="marketing_consent">Marketing Consent</label>
+                                    <select id="marketing_consent">
+                                        <option value="Yes" selected>Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="days_since_signup">Days Since Sign-up</label>
+                                    <div class="input-label-container">
+                                        <span></span>
+                                        <span class="value-bubble" id="val-days_since_signup">365</span>
+                                    </div>
+                                    <input type="range" id="days_since_signup" min="1" max="1000" value="365" oninput="updateBubble(this)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RFM Metrics Section -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                2. RFM & Purchases (180 Days)
+                            </h4>
+                            <div class="form-grid">
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="recency_days">Recency (Days Since Purchase)</label>
+                                        <span class="value-bubble" id="val-recency_days">12.5</span>
+                                    </div>
+                                    <input type="range" id="recency_days" min="0" max="180" step="0.5" value="12.5" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="frequency_180d">Purchase Frequency</label>
+                                        <span class="value-bubble" id="val-frequency_180d">4</span>
+                                    </div>
+                                    <input type="range" id="frequency_180d" min="0" max="40" step="1" value="4" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="monetary_180d">Monetary Value ($)</label>
+                                        <span class="value-bubble" id="val-monetary_180d">2500</span>
+                                    </div>
+                                    <input type="range" id="monetary_180d" min="0" max="10000" step="50" value="2500" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="return_rate_180d">Product Return Rate</label>
+                                        <span class="value-bubble" id="val-return_rate_180d">0.00</span>
+                                    </div>
+                                    <input type="range" id="return_rate_180d" min="0" max="1" step="0.01" value="0.0" oninput="updateBubble(this, true)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="avg_discount_pct_180d">Avg Discount Rate</label>
+                                        <span class="value-bubble" id="val-avg_discount_pct_180d">0.15</span>
+                                    </div>
+                                    <input type="range" id="avg_discount_pct_180d" min="0" max="0.8" step="0.01" value="0.15" oninput="updateBubble(this, true)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="category_diversity_180d">Categories Explored</label>
+                                        <span class="value-bubble" id="val-category_diversity_180d">2</span>
+                                    </div>
+                                    <input type="range" id="category_diversity_180d" min="1" max="10" step="1" value="2" oninput="updateBubble(this)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customer Support Section -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                3. Support & Feedback (90 Days)
+                            </h4>
+                            <div class="form-grid">
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="ticket_count_90d">Support Tickets Filed</label>
+                                        <span class="value-bubble" id="val-ticket_count_90d">0</span>
+                                    </div>
+                                    <input type="range" id="ticket_count_90d" min="0" max="15" step="1" value="0" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="negative_ticket_rate_90d">Negative Ticket Sentiment Rate</label>
+                                        <span class="value-bubble" id="val-negative_ticket_rate_90d">0.00</span>
+                                    </div>
+                                    <input type="range" id="negative_ticket_rate_90d" min="0" max="1" step="0.05" value="0.0" oninput="updateBubble(this, true)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="avg_resolution_hours_90d">Avg Resolution Time (Hrs)</label>
+                                        <span class="value-bubble" id="val-avg_resolution_hours_90d">0.0</span>
+                                    </div>
+                                    <input type="range" id="avg_resolution_hours_90d" min="0" max="120" step="0.5" value="0.0" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="avg_rating_180d">Avg Product Rating Given</label>
+                                        <span class="value-bubble" id="val-avg_rating_180d">4.5</span>
+                                    </div>
+                                    <input type="range" id="avg_rating_180d" min="1" max="5" step="0.1" value="4.5" oninput="updateBubble(this)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Web Activity Section -->
+                        <div class="form-section">
+                            <h4 class="form-section-title">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M4.93 4.93l14.14 14.14"/></svg>
+                                4. Engagement & Activity (30 Days)
+                            </h4>
+                            <div class="form-grid">
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="sessions_30d">Web Sessions</label>
+                                        <span class="value-bubble" id="val-sessions_30d">5</span>
+                                    </div>
+                                    <input type="range" id="sessions_30d" min="0" max="80" step="1" value="5" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="product_views_30d">Product Detail Views</label>
+                                        <span class="value-bubble" id="val-product_views_30d">12</span>
+                                    </div>
+                                    <input type="range" id="product_views_30d" min="0" max="150" step="1" value="12" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="cart_adds_30d">Items Added to Cart</label>
+                                        <span class="value-bubble" id="val-cart_adds_30d">2</span>
+                                    </div>
+                                    <input type="range" id="cart_adds_30d" min="0" max="30" step="1" value="2" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="wishlist_adds_30d">Items Added to Wishlist</label>
+                                        <span class="value-bubble" id="val-wishlist_adds_30d">1</span>
+                                    </div>
+                                    <input type="range" id="wishlist_adds_30d" min="0" max="30" step="1" value="1" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="abandoned_carts_30d">Abandoned Carts</label>
+                                        <span class="value-bubble" id="val-abandoned_carts_30d">0</span>
+                                    </div>
+                                    <input type="range" id="abandoned_carts_30d" min="0" max="10" step="1" value="0" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="email_opens_30d">Marketing Email Opens</label>
+                                        <span class="value-bubble" id="val-email_opens_30d">4</span>
+                                    </div>
+                                    <input type="range" id="email_opens_30d" min="0" max="30" step="1" value="4" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="campaign_clicks_30d">Ad Campaign Clicks</label>
+                                        <span class="value-bubble" id="val-campaign_clicks_30d">1</span>
+                                    </div>
+                                    <input type="range" id="campaign_clicks_30d" min="0" max="20" step="1" value="1" oninput="updateBubble(this)">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-label-container">
+                                        <label for="last_visit_days_ago">Days Since Last Visit</label>
+                                        <span class="value-bubble" id="val-last_visit_days_ago">3</span>
+                                    </div>
+                                    <input type="range" id="last_visit_days_ago" min="0" max="30" step="1" value="3" oninput="updateBubble(this)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            Evaluate Churn Risk
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Visual Prediction Output Column -->
+                <div class="results-panel">
+                    
+                    <!-- Main Gauge card -->
+                    <div class="glass-card results-card" id="results-placeholder-card">
+                        <h2 class="panel-heading" style="width: 100%;">Analysis Results</h2>
+                        <div style="padding: 4rem 1rem; color: var(--text-muted); text-align: center;">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 1.25rem; opacity: 0.6; color: var(--color-primary);"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            <p style="font-weight: 700; font-size: 1.1rem; color: var(--text-main);">Console Standby</p>
+                            <p style="font-size: 0.85rem; margin-top: 6px; font-weight: 500;">Fill parameters and click "Evaluate Churn Risk" to run ML inference.</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card results-card" id="results-display-card" style="display: none;">
+                        <h2 class="panel-heading" style="width: 100%;">Churn Probability</h2>
+                        
+                        <!-- Circular 3D Gauge Recess -->
+                        <div class="gauge-wrapper">
+                            <svg class="gauge-svg" width="180" height="180">
+                                <circle class="gauge-track" cx="90" cy="90" r="76"></circle>
+                                <circle class="gauge-fill" id="radial-gauge-fill" cx="90" cy="90" r="76"></circle>
+                            </svg>
+                            <div class="gauge-text">
+                                <div class="gauge-percentage" id="result-probability">0.0%</div>
+                                <div class="gauge-label">Score</div>
+                            </div>
+                        </div>
+
+                        <!-- Churn Risk Alert Banner -->
+                        <div class="risk-alert-card" id="risk-alert-card">
+                            <span class="risk-badge" id="result-risk-badge">Low Risk</span>
+                            <div class="risk-explanation" id="result-risk-explanation">
+                                Monitor behavior. High probability triggers suppression filters.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Business Interventions -->
+                    <div class="glass-card recs-card" id="recs-display-card" style="display: none;">
+                        <h2 class="panel-heading" style="margin-bottom: 1.5rem;">CRM Action Triggers</h2>
+                        <div id="recs-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- Appended dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 2: BATCH PREDICTOR -->
+        <div id="batch-tab" class="tab-panel">
+            <div class="glass-card predictor-card" style="margin-bottom: 2rem;">
+                <h2 class="panel-heading">Batch Churn Processing</h2>
+                
+                <div class="drag-drop-zone" id="drop-zone" onclick="document.getElementById('csv-file-input').click()">
+                    <div class="upload-icon">📥</div>
+                    <p style="font-weight: 700; font-size: 1.15rem; color: var(--text-main);">Drag & drop customer CSV here, or click to browse</p>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">CSV headers must match API feature names. First column can be customer_id.</p>
+                    <input type="file" id="csv-file-input" style="display: none;" accept=".csv" onchange="handleFileSelect(event)">
+                </div>
+
+                <!-- Batch processing overview stats (initially hidden) -->
+                <div class="batch-stats-grid" id="batch-stats" style="display: none;">
+                    <div class="glass-card stat-card" style="border-bottom-color: var(--color-secondary);">
+                        <div class="stat-label">Total Uploaded</div>
+                        <div class="stat-val" id="stat-total">0</div>
+                    </div>
+                    <div class="glass-card stat-card" style="border-bottom-color: var(--color-danger);" id="stat-risk-card">
+                        <div class="stat-label">High Risk Churn</div>
+                        <div class="stat-val" id="stat-risk-pct">0%</div>
+                    </div>
+                    <div class="glass-card stat-card" style="border-bottom-color: var(--color-primary);">
+                        <div class="stat-label">Avg Probability</div>
+                        <div class="stat-val" id="stat-avg-prob">0%</div>
+                    </div>
+                    <div class="glass-card stat-card" style="border-bottom-color: var(--color-warning);">
+                        <div class="stat-label">Revenue at Risk</div>
+                        <div class="stat-val" id="stat-revenue-risk">$0</div>
+                    </div>
+                </div>
+
+                <!-- Table display zone -->
+                <div id="batch-table-container" style="display: none; margin-top: 2rem;">
+                    <div class="table-controls">
+                        <div class="search-wrapper">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" class="search-input" id="table-search" placeholder="Search Customer ID..." oninput="filterBatchTable()">
+                        </div>
+                        <div class="table-actions">
+                            <button class="btn-small" onclick="filterBatchRows('all')">Show All</button>
+                            <button class="btn-small" style="color: var(--color-danger);" onclick="filterBatchRows('high')">High Risk</button>
+                            <button class="btn-small" style="color: var(--color-success);" onclick="filterBatchRows('low')">Low Risk</button>
+                            <button class="btn-small primary" onclick="exportPredictionsCSV()">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                Export Results
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table id="predictions-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer ID</th>
+                                    <th>Churn Score</th>
+                                    <th>Classification</th>
+                                    <th>Loyalty Tier</th>
+                                    <th>Monetary ($)</th>
+                                    <th>Last Visit</th>
+                                    <th>Support Tickets</th>
+                                </tr>
+                            </thead>
+                            <tbody id="predictions-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: MODEL INSIGHTS -->
+        <div id="insights-tab" class="tab-panel">
+            <div class="simulation-grid">
+                
+                <!-- Simulation / Config panel -->
+                <div class="glass-card insights-card">
+                    <h2 class="panel-heading">Simulation Sandbox</h2>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 1rem; font-weight: 500;">
+                        Adjust the decision threshold dynamically. In production, the optimal balance between high precision and high recall was established at <strong>0.40</strong>.
+                    </p>
+                    
+                    <div class="sim-slider-wrapper">
+                        <div class="stat-label">Classification Decision Threshold</div>
+                        <div class="sim-slider-val" id="sim-threshold-display">0.40</div>
+                        <input type="range" id="sim-threshold" min="0.1" max="0.9" step="0.01" value="0.40" oninput="adjustThreshold(this)">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; font-weight: 600;">
+                            <span>0.1 (High Recall)</span>
+                            <span>0.40 (Optimal)</span>
+                            <span>0.9 (High Precision)</span>
+                        </div>
+                    </div>
+
+                    <div class="info-list" style="margin-top: 2rem;">
+                        <h3 class="form-section-title" style="margin-bottom: 0.5rem;">Model Specifications</h3>
+                        <div class="info-item">
+                            <span>Classifier Type</span>
+                            <span>RandomForest Classifier</span>
+                        </div>
+                        <div class="info-item">
+                            <span>Training Recall</span>
+                            <span>90.4% (Baseline)</span>
+                        </div>
+                        <div class="info-item">
+                            <span>Training F1-Score</span>
+                            <span>88.4%</span>
+                        </div>
+                        <div class="info-item">
+                            <span>Feature Count</span>
+                            <span>26 variables</span>
+                        </div>
+                        <div class="info-item">
+                            <span>Target Period</span>
+                            <span>60-Day Churn Risk</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3 class="form-section-title" style="margin-bottom: 0.5rem;">MLOps Drift Strategy</h3>
+                        <div class="info-list">
+                            <div class="info-item">
+                                <span>Concept Drift Metric</span>
+                                <span>Monthly Recall target &ge; 85%</span>
+                            </div>
+                            <div class="info-item">
+                                <span>Data Drift Metric</span>
+                                <span>PSI Alert threshold &gt; 0.20</span>
+                            </div>
+                            <div class="info-item">
+                                <span>P99 API Latency</span>
+                                <span>&lt; 500ms target</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guidelines & Features panel -->
+                <div class="glass-card insights-card">
+                    <h2 class="panel-heading">Responsible AI Use Guidelines</h2>
+                    <div class="rules-container">
+                        <div class="rule-pill allowed">
+                            <strong>✅ Approved Use Cases</strong><br>
+                            Route at-risk customers into automated CRM email funnels, deliver personalized win-back offers (such as 15% discount packages), and alert customer success agents to prioritize outstanding support tickets.
+                        </div>
+                        <div class="rule-pill forbidden">
+                            <strong>❌ Restricted Actions</strong><br>
+                            Baseline pricing discrimination or gouging is strictly forbidden. The prediction model must never be used to degrade service speed, throttle bandwidth, or deny standard support channels.
+                        </div>
+                    </div>
+
+                    <h2 class="panel-heading" style="margin-top: 2.5rem; margin-bottom: 1.5rem;">Features Dictionary (26 Input Schema)</h2>
+                    <div class="features-grid-list">
+                        <div class="feature-item-card">
+                            <div class="feat-name">customer_id</div>
+                            <div class="feat-desc">Unique identifier for customer trace. Dropped during inference.</div>
+                        </div>
+                        <div class="feature-item-card">
+                            <div class="feat-name">recency_days</div>
+                            <div class="feat-desc">Days since the customer's last purchase. Key indicator of loyalty.</div>
+                        </div>
+                        <div class="feature-item-card">
+                            <div class="feat-name">frequency_180d</div>
+                            <div class="feat-desc">Number of unique purchases made in the last 180 days.</div>
+                        </div>
+                        <div class="feature-item-card">
+                            <div class="feat-name">monetary_180d</div>
+                            <div class="feat-desc">Total spending of the customer during the last 180 days.</div>
+                        </div>
+                        <div class="feature-item-card">
+                            <div class="feat-name">ticket_count_90d</div>
+                            <div class="feat-desc">Total support tickets submitted in the last 90 days.</div>
+                        </div>
+                        <div class="feature-item-card">
+                            <div class="feat-name">negative_ticket_rate_90d</div>
+                            <div class="feat-desc">Ratio of support tickets marked with disappointed or negative sentiment.</div>
+                        </div>
+                        <div class="feature-item-card">
+                            <div class="feat-name">avg_resolution_hours_90d</div>
+                            <div class="feat-desc">Average time (hours) support took to close tickets.</div>
+                        </div>
+                        <div class="feature-item-card">
+                            <div class="feat-name">last_visit_days_ago</div>
+                            <div class="feat-desc">Days since the customer last logged onto the web interface.</div>
+                        </div>
+                        <div class="feature-item-card">
+                            <div class="feat-name">sessions_30d</div>
+                            <div class="feat-desc">Web sessions logged in the last 30 days.</div>
+                        </div>
+                        <div class="feature-item-card">
+                            <div class="feat-name">abandoned_carts_30d</div>
+                            <div class="feat-desc">Unsubmitted carts containing products in the last 30 days.</div>
+                        </div>
+                        <div class="feature-item-card">
+                            <div class="feat-name">avg_discount_pct_180d</div>
+                            <div class="feat-desc">Average discount percentage applied to historical orders.</div>
+                        </div>
+                        <div class="feature-item-card">
+                            <div class="feat-name">return_rate_180d</div>
+                            <div class="feat-desc">Percentage of purchased products returned by the user.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        ChurnLens AI Dashboard Console • Premium 3D Neumorphic Client Edition • Powered by FastAPI & RandomForest.
+    </footer>
+
+    <!-- JS Scripts for behavior -->
+    <script>
+        // Set optimal threshold variable globally
+        let currentThreshold = 0.40;
+        let healthChecked = false;
+        
+        // Cache parsed batch predictions
+        let batchPredictions = [];
+        let batchFilter = 'all';
+
+        // Toggle User Guide modal visibility
+        function toggleGuide(show) {
+            const modal = document.getElementById('guide-modal');
+            if (show) {
+                modal.style.display = 'flex';
+                // Trigger browser reflow to enable CSS transition
+                modal.offsetHeight;
+                modal.classList.add('active');
+            } else {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            }
+        }
+
+        // Toggle Theme (Dark / Light)
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('theme-toggle-btn');
+            body.classList.toggle('dark-theme');
+            
+            const isDark = body.classList.contains('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            
+            btn.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+            
+            // Re-render gauge colors to match the theme color variables
+            if (document.getElementById('results-display-card').style.display !== 'none') {
+                const probText = document.getElementById('result-probability').textContent;
+                const prob = parseFloat(probText) / 100;
+                updateRadialGauge(prob);
+            }
+        }
+
+        // Check Health Status on Startup
+        async function checkApiHealth() {
+            const ind = document.getElementById('health-indicator');
+            const lbl = document.getElementById('health-label');
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                if (response.ok && data.status === 'healthy') {
+                    ind.className = 'status-indicator online';
+                    lbl.innerHTML = `API Status: Online (${data.model})`;
+                    healthChecked = true;
+                } else {
+                    ind.className = 'status-indicator offline';
+                    lbl.innerHTML = 'API Status: Service Degraded';
+                }
+            } catch (err) {
+                ind.className = 'status-indicator offline';
+                lbl.innerHTML = 'API Status: Offline (Unreachable)';
+            }
+        }
+        
+        window.addEventListener('load', () => {
+            // Apply saved theme preference on load
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('theme-toggle-btn').innerHTML = '☀️ Light Mode';
+            }
+            
+            checkApiHealth();
+            // Automatically update bubbles on start
+            document.querySelectorAll('input[type="range"]').forEach(input => {
+                const isFloat = ['return_rate_180d', 'avg_discount_pct_180d', 'negative_ticket_rate_90d'].includes(input.id);
+                updateBubble(input, isFloat);
+            });
+        });
+
+        // Tab Switching Logic
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(button => button.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // Live slider bubble updater
+        function updateBubble(slider, isFloat = false) {
+            const bubble = document.getElementById(`val-${slider.id}`);
+            if (bubble) {
+                let val = parseFloat(slider.value);
+                bubble.textContent = isFloat ? val.toFixed(2) : val;
+            }
+        }
+
+        // Load Preset Persona values into form
+        function loadPersona(type) {
+            const presets = {
+                promoter: {
+                    customer_id: "VIP-PROMOTER",
+                    city_tier: "Tier 1",
+                    age_group: "25-34",
+                    loyalty_tier: "Gold",
+                    acquisition_channel: "Organic",
+                    preferred_category: "Skin Care",
+                    marketing_consent: "Yes",
+                    days_since_signup: 730,
+                    recency_days: 2.0,
+                    frequency_180d: 14,
+                    monetary_180d: 7800,
+                    return_rate_180d: 0.0,
+                    avg_discount_pct_180d: 0.05,
+                    category_diversity_180d: 4,
+                    ticket_count_90d: 0,
+                    negative_ticket_rate_90d: 0.0,
+                    avg_resolution_hours_90d: 0.0,
+                    avg_rating_180d: 4.9,
+                    sessions_30d: 28,
+                    product_views_30d: 72,
+                    cart_adds_30d: 18,
+                    wishlist_adds_30d: 8,
+                    abandoned_carts_30d: 0,
+                    email_opens_30d: 14,
+                    campaign_clicks_30d: 4,
+                    last_visit_days_ago: 1
+                },
+                bargain: {
+                    customer_id: "CHURN-BARGAIN",
+                    city_tier: "Tier 3",
+                    age_group: "18-24",
+                    loyalty_tier: "Bronze",
+                    acquisition_channel: "Social Media",
+                    preferred_category: "Makeup",
+                    marketing_consent: "No",
+                    days_since_signup: 90,
+                    recency_days: 45.0,
+                    frequency_180d: 2,
+                    monetary_180d: 450,
+                    return_rate_180d: 0.60,
+                    avg_discount_pct_180d: 0.65,
+                    category_diversity_180d: 1,
+                    ticket_count_90d: 4,
+                    negative_ticket_rate_90d: 0.75,
+                    avg_resolution_hours_90d: 48.0,
+                    avg_rating_180d: 1.8,
+                    sessions_30d: 2,
+                    product_views_30d: 4,
+                    cart_adds_30d: 1,
+                    wishlist_adds_30d: 0,
+                    abandoned_carts_30d: 3,
+                    email_opens_30d: 1,
+                    campaign_clicks_30d: 0,
+                    last_visit_days_ago: 24
+                },
+                slipping: {
+                    customer_id: "SLIPPING-CHAMP",
+                    city_tier: "Tier 1",
+                    age_group: "35-44",
+                    loyalty_tier: "Platinum",
+                    acquisition_channel: "Paid Search",
+                    preferred_category: "Hair Care",
+                    marketing_consent: "Yes",
+                    days_since_signup: 520,
+                    recency_days: 35.0,
+                    frequency_180d: 8,
+                    monetary_180d: 4200,
+                    return_rate_180d: 0.10,
+                    avg_discount_pct_180d: 0.15,
+                    category_diversity_180d: 3,
+                    ticket_count_90d: 1,
+                    negative_ticket_rate_90d: 0.0,
+                    avg_resolution_hours_90d: 12.0,
+                    avg_rating_180d: 4.2,
+                    sessions_30d: 3,
+                    product_views_30d: 8,
+                    cart_adds_30d: 2,
+                    wishlist_adds_30d: 1,
+                    abandoned_carts_30d: 1,
+                    email_opens_30d: 2,
+                    campaign_clicks_30d: 1,
+                    last_visit_days_ago: 22
+                },
+                new_inactive: {
+                    customer_id: "NEW-INACTIVE",
+                    city_tier: "Tier 2",
+                    age_group: "25-34",
+                    loyalty_tier: "None",
+                    acquisition_channel: "Influencer",
+                    preferred_category: "Skin Care",
+                    marketing_consent: "Yes",
+                    days_since_signup: 35,
+                    recency_days: 0.0,
+                    frequency_180d: 0,
+                    monetary_180d: 0,
+                    return_rate_180d: 0.0,
+                    avg_discount_pct_180d: 0.0,
+                    category_diversity_180d: 1,
+                    ticket_count_90d: 0,
+                    negative_ticket_rate_90d: 0.0,
+                    avg_resolution_hours_90d: 0.0,
+                    avg_rating_180d: 3.0,
+                    sessions_30d: 1,
+                    product_views_30d: 2,
+                    cart_adds_30d: 1,
+                    wishlist_adds_30d: 0,
+                    abandoned_carts_30d: 1,
+                    email_opens_30d: 0,
+                    campaign_clicks_30d: 0,
+                    last_visit_days_ago: 28
+                }
+            };
+
+            const preset = presets[type];
+            if (!preset) return;
+
+            // Fill standard inputs
+            document.getElementById('customer_id').value = preset.customer_id;
+            document.getElementById('city_tier').value = preset.city_tier;
+            document.getElementById('age_group').value = preset.age_group;
+            document.getElementById('loyalty_tier').value = preset.loyalty_tier;
+            document.getElementById('acquisition_channel').value = preset.acquisition_channel;
+            document.getElementById('preferred_category').value = preset.preferred_category;
+            document.getElementById('marketing_consent').value = preset.marketing_consent;
+
+            // Fill sliders
+            const rangeInputs = document.querySelectorAll('input[type="range"]');
+            rangeInputs.forEach(input => {
+                if (preset[input.id] !== undefined) {
+                    input.value = preset[input.id];
+                    const isFloat = ['return_rate_180d', 'avg_discount_pct_180d', 'negative_ticket_rate_90d'].includes(input.id);
+                    updateBubble(input, isFloat);
+                }
+            });
+
+            // Smooth flash animation on form inputs
+            const predictor = document.querySelector('.predictor-card');
+            predictor.style.boxShadow = '0 0 25px rgba(139, 92, 246, 0.25), var(--shadow-3d-out)';
+            setTimeout(() => {
+                predictor.style.boxShadow = 'var(--shadow-3d-out)';
+            }, 600);
+
+            // Automatically submit the prediction
+            document.getElementById('churn-form').dispatchEvent(new Event('submit'));
+        }
+
+        // Handle Form Submission
+        async function submitPrediction(e) {
+            e.preventDefault();
+            
+            const payload = {
+                customer_id: document.getElementById('customer_id').value,
+                city_tier: document.getElementById('city_tier').value,
+                age_group: document.getElementById('age_group').value,
+                loyalty_tier: document.getElementById('loyalty_tier').value,
+                acquisition_channel: document.getElementById('acquisition_channel').value,
+                preferred_category: document.getElementById('preferred_category').value,
+                marketing_consent: document.getElementById('marketing_consent').value,
+                days_since_signup: parseFloat(document.getElementById('days_since_signup').value),
+                recency_days: parseFloat(document.getElementById('recency_days').value),
+                frequency_180d: parseFloat(document.getElementById('frequency_180d').value),
+                monetary_180d: parseFloat(document.getElementById('monetary_180d').value),
+                return_rate_180d: parseFloat(document.getElementById('return_rate_180d').value),
+                avg_discount_pct_180d: parseFloat(document.getElementById('avg_discount_pct_180d').value),
+                category_diversity_180d: parseFloat(document.getElementById('category_diversity_180d').value),
+                ticket_count_90d: parseFloat(document.getElementById('ticket_count_90d').value),
+                negative_ticket_rate_90d: parseFloat(document.getElementById('negative_ticket_rate_90d').value),
+                avg_resolution_hours_90d: parseFloat(document.getElementById('avg_resolution_hours_90d').value),
+                avg_rating_180d: parseFloat(document.getElementById('avg_rating_180d').value),
+                sessions_30d: parseFloat(document.getElementById('sessions_30d').value),
+                product_views_30d: parseFloat(document.getElementById('product_views_30d').value),
+                cart_adds_30d: parseFloat(document.getElementById('cart_adds_30d').value),
+                wishlist_adds_30d: parseFloat(document.getElementById('wishlist_adds_30d').value),
+                abandoned_carts_30d: parseFloat(document.getElementById('abandoned_carts_30d').value),
+                email_opens_30d: parseFloat(document.getElementById('email_opens_30d').value),
+                campaign_clicks_30d: parseFloat(document.getElementById('campaign_clicks_30d').value),
+                last_visit_days_ago: parseFloat(document.getElementById('last_visit_days_ago').value)
+            };
+
+            const placeholder = document.getElementById('results-placeholder-card');
+            const displayCard = document.getElementById('results-display-card');
+            const recsCard = document.getElementById('recs-display-card');
+
+            try {
+                // Fetch prediction from FastAPI
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error("API call failed");
+                }
+                
+                const data = await response.json();
+                
+                // Toggle card displays
+                placeholder.style.display = 'none';
+                displayCard.style.display = 'flex';
+                recsCard.style.display = 'block';
+
+                // Update Radial Gauge
+                const prob = data.churn_probability;
+                updateRadialGauge(prob);
+
+                // Update Risk Pill Alert Info
+                const riskPill = document.getElementById('result-risk-badge');
+                const riskExp = document.getElementById('result-risk-explanation');
+                const riskCard = document.getElementById('risk-alert-card');
+
+                // Recalculate based on threshold (local simulator sync)
+                const isHighRisk = prob >= currentThreshold;
+                
+                riskPill.textContent = isHighRisk ? "High Risk" : "Low Risk";
+                riskPill.className = `risk-badge ${isHighRisk ? 'high' : 'low'}`;
+                riskCard.className = `risk-alert-card ${isHighRisk ? 'high-risk' : 'low-risk'}`;
+                
+                if (isHighRisk) {
+                    riskExp.textContent = "High risk of churn detected. Decision threshold set at " + currentThreshold.toFixed(2) + ". Directing to CRM intervention pipeline.";
+                } else {
+                    riskExp.textContent = "Low risk of churn. Monitor behavior. Automatic marketing filters remain inactive.";
+                }
+
+                // Generate CRM Action Recommendations
+                generateInterventions(payload, prob, isHighRisk);
+
+            } catch (err) {
+                console.error(err);
+                alert("Model inference error. Make sure FastAPI server is running with loaded model.");
+            }
+        }
+
+        // SVG Gauge fill updating with dynamic color interpolation (Green/Teal -> Orange -> Red/Magenta)
+        // stroke-dasharray: 477.5 (2 * Math.PI * 76)
+        function updateRadialGauge(prob) {
+            const fill = document.getElementById('radial-gauge-fill');
+            const text = document.getElementById('result-probability');
+            
+            const offset = 477.5 - (prob * 477.5);
+            fill.style.strokeDashoffset = offset;
+            text.innerHTML = (prob * 100).toFixed(1) + '<span style="font-size:1.3rem; font-weight:700;">%</span>';
+
+            const hue = 150 - (prob * 160); 
+            const sat = 75 + (prob * 15); 
+            const light = 45 + (prob * 5); 
+            
+            fill.style.stroke = `hsl(${hue}, ${sat}%, ${light}%)`;
+            text.style.color = `hsl(${hue}, ${sat}%, ${light - 10}%)`;
+        }
+
+        // Generate tailored business rules recommendations
+        function generateInterventions(features, probability, isHighRisk) {
+            const list = document.getElementById('recs-list');
+            list.innerHTML = ''; // Clear items
+
+            const recs = [];
+
+            // Add standard campaign tagging rules
+            if (isHighRisk) {
+                recs.push({
+                    icon: '🏷️',
+                    title: 'CRM Automation Tag',
+                    text: 'Tag customer as <strong>[AT_RISK_CHURN]</strong> in CRM databases immediately.'
+                });
+                recs.push({
+                    icon: '🚫',
+                    title: 'Generic Campaign Suppression',
+                    text: 'Suppress profile from all "New Launch" and broad branding campaigns to prevent marketing fatigue.'
+                });
+                recs.push({
+                    icon: '✉️',
+                    title: 'Win-Back Sequence',
+                    text: 'Route automatically to the automated email Win-Back workflow offering personalized messaging.'
+                });
+            } else {
+                recs.push({
+                    icon: '📰',
+                    title: 'Routine Engagement',
+                    text: 'Keep in baseline monthly newsletters and seasonal D2C promotion funnels.'
+                });
+            }
+
+            // Integration Guide: Slack Alert for high value + open tickets
+            if (isHighRisk && features.monetary_180d > 1000 && features.ticket_count_90d > 0) {
+                recs.push({
+                    icon: '🚨',
+                    title: 'High-Value Ticket Warning',
+                    text: '<strong>VIP Warning:</strong> Post Slack notification to CS channel for manual review. High spend ($' + features.monetary_180d + ') with unresolved tickets.'
+                });
+            }
+
+            // Discount affinity
+            if (isHighRisk && features.avg_discount_pct_180d > 0.30) {
+                recs.push({
+                    icon: '🎟️',
+                    title: 'Loyalty points offer',
+                    text: 'Affinity for high discount (' + (features.avg_discount_pct_180d * 100).toFixed(0) + '%). Avoid sending price coupons; offer loyalty multiplier points instead.'
+                });
+            }
+
+            // High return rate
+            if (features.return_rate_180d > 0.25) {
+                recs.push({
+                    icon: '📦',
+                    title: 'Return-Rate Inquiry',
+                    text: 'Return rate is high (' + (features.return_rate_180d * 100).toFixed(0) + '%). Trigger post-return CS questionnaire to diagnose quality complaints.'
+                });
+            }
+
+            // Support delays
+            if (features.avg_resolution_hours_90d > 24) {
+                recs.push({
+                    icon: '⏳',
+                    title: 'Ticket Resolution Remediation',
+                    text: 'Average resolution took ' + features.avg_resolution_hours_90d.toFixed(1) + ' hrs. Issue personalized apology email from CS lead.'
+                });
+            }
+
+            // Inactive days
+            if (features.last_visit_days_ago > 15) {
+                recs.push({
+                    icon: '📲',
+                    title: 'Re-engagement SMS Alert',
+                    text: 'Last visit was ' + features.last_visit_days_ago + ' days ago. Send personalized SMS text reminder with an exclusive cart item reservation.'
+                });
+            }
+
+            // Render recs
+            recs.forEach(rec => {
+                const item = document.createElement('div');
+                item.className = 'rec-item';
+                item.innerHTML = `
+                    <span class="rec-icon">${rec.icon}</span>
+                    <div class="rec-content">
+                        <span class="rec-title">${rec.title}</span>
+                        <span class="rec-text">${rec.text}</span>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // ==========================================
+        // BATCH PROCESSING JS
+        // ==========================================
+        
+        // Setup Drag & Drop handlers
+        const dropZone = document.getElementById('drop-zone');
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--color-primary)';
+                dropZone.style.background = 'rgba(139, 92, 246, 0.05)';
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'rgba(139, 92, 246, 0.35)';
+                dropZone.style.background = 'rgba(139, 92, 246, 0.02)';
+            }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length) {
+                processCSVFile(files[0]);
+            }
+        });
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length) {
+                processCSVFile(files[0]);
+            }
+        }
+
+        // Client-side CSV file reading
+        function processCSVFile(file) {
+            const reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = async function(e) {
+                const text = e.target.result;
+                const parsedData = parseCSV(text);
+                
+                if (parsedData.length === 0) {
+                    alert("Invalid CSV format. Check headers.");
+                    return;
+                }
+                
+                await sendBatchPrediction(parsedData);
+            };
+        }
+
+        // Standard CSV Parser
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            if (lines.length < 2) return [];
+            
+            // Clean headers
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
+            const results = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    if (char === '"' || char === "'") {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(current.trim().replace(/^["']|["']$/g, ''));
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                values.push(current.trim().replace(/^["']|["']$/g, ''));
+                
+                if (values.length < headers.length) continue;
+                
+                const obj = {};
+                headers.forEach((h, index) => {
+                    obj[h] = values[index];
+                });
+                results.push(obj);
+            }
+            return results;
+        }
+
+        // API batch predict connection
+        async function sendBatchPrediction(records) {
+            // Check that required fields are parsed and formatted
+            const formattedRecords = records.map(r => {
+                return {
+                    customer_id: r.customer_id || "CUST-" + Math.floor(Math.random() * 90000 + 10000),
+                    city_tier: r.city_tier || "Tier 1",
+                    age_group: r.age_group || "25-34",
+                    loyalty_tier: r.loyalty_tier || "Gold",
+                    acquisition_channel: r.acquisition_channel || "Organic",
+                    preferred_category: r.preferred_category || "Skin Care",
+                    marketing_consent: r.marketing_consent || "Yes",
+                    days_since_signup: parseFloat(r.days_since_signup || 365),
+                    recency_days: parseFloat(r.recency_days || 10),
+                    frequency_180d: parseFloat(r.frequency_180d || 2),
+                    monetary_180d: parseFloat(r.monetary_180d || 1000),
+                    return_rate_180d: parseFloat(r.return_rate_180d || 0.0),
+                    avg_discount_pct_180d: parseFloat(r.avg_discount_pct_180d || 0.1),
+                    category_diversity_180d: parseFloat(r.category_diversity_180d || 1),
+                    ticket_count_90d: parseFloat(r.ticket_count_90d || 0),
+                    negative_ticket_rate_90d: parseFloat(r.negative_ticket_rate_90d || 0.0),
+                    avg_resolution_hours_90d: parseFloat(r.avg_resolution_hours_90d || 0.0),
+                    avg_rating_180d: parseFloat(r.avg_rating_180d || 4.0),
+                    sessions_30d: parseFloat(r.sessions_30d || 5),
+                    product_views_30d: parseFloat(r.product_views_30d || 10),
+                    cart_adds_30d: parseFloat(r.cart_adds_30d || 1),
+                    wishlist_adds_30d: parseFloat(r.wishlist_adds_30d || 0),
+                    abandoned_carts_30d: parseFloat(r.abandoned_carts_30d || 0),
+                    email_opens_30d: parseFloat(r.email_opens_30d || 2),
+                    campaign_clicks_30d: parseFloat(r.campaign_clicks_30d || 0),
+                    last_visit_days_ago: parseFloat(r.last_visit_days_ago || 5)
+                };
+            });
+
+            try {
+                const response = await fetch('/batch_predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formattedRecords)
+                });
+
+                if (!response.ok) {
+                    throw new Error("Batch API failed");
+                }
+
+                const data = await response.json();
+                
+                // Blend response predictions back with input data for UI table details
+                batchPredictions = data.predictions.map((p, idx) => {
+                    return {
+                        ...p,
+                        loyalty_tier: formattedRecords[idx].loyalty_tier,
+                        monetary_180d: formattedRecords[idx].monetary_180d,
+                        last_visit_days_ago: formattedRecords[idx].last_visit_days_ago,
+                        ticket_count_90d: formattedRecords[idx].ticket_count_90d
+                    };
+                });
+
+                // Display stats and table
+                document.getElementById('batch-stats').style.display = 'grid';
+                document.getElementById('batch-table-container').style.display = 'block';
+
+                updateBatchStats();
+                renderBatchTable();
+
+            } catch (err) {
+                console.error(err);
+                alert("Batch inference request failed. Check server connection.");
+            }
+        }
+
+        // Calculate and render batch statistics cards
+        function updateBatchStats() {
+            const total = batchPredictions.length;
+            
+            // Recalculate based on threshold simulator
+            const highRiskItems = batchPredictions.filter(p => p.churn_probability >= currentThreshold);
+            const highCount = highRiskItems.length;
+            const avgProb = batchPredictions.reduce((acc, p) => acc + p.churn_probability, 0) / total;
+            
+            const revenueAtRisk = highRiskItems.reduce((acc, p) => acc + p.monetary_180d, 0);
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-risk-pct').textContent = ((highCount / total) * 100).toFixed(1) + '%';
+            document.getElementById('stat-avg-prob').textContent = (avgProb * 100).toFixed(1) + '%';
+            document.getElementById('stat-revenue-risk').textContent = '$' + revenueAtRisk.toLocaleString(undefined, {maximumFractionDigits:0});
+
+            // Adjust card alert style
+            const rCard = document.getElementById('stat-risk-card');
+            if (highCount / total > 0.3) {
+                rCard.style.borderBottomColor = 'var(--color-danger)';
+                rCard.style.boxShadow = '6px 6px 15px rgba(239, 68, 68, 0.15), var(--shadow-3d-out)';
+            } else {
+                rCard.style.borderBottomColor = '#cbd5e1';
+                rCard.style.boxShadow = 'var(--shadow-3d-out)';
+            }
+        }
+
+        // Render predictions inside scrollable table
+        function renderBatchTable() {
+            const tbody = document.getElementById('predictions-tbody');
+            tbody.innerHTML = '';
+
+            const query = document.getElementById('table-search').value.toLowerCase();
+
+            batchPredictions.forEach(p => {
+                // Apply Search filter
+                if (query && !p.customer_id.toLowerCase().includes(query)) {
+                    return;
+                }
+
+                // Apply Row Risk level filter
+                const isHigh = p.churn_probability >= currentThreshold;
+                if (batchFilter === 'high' && !isHigh) return;
+                if (batchFilter === 'low' && isHigh) return;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-family:var(--font-mono); font-weight:700; color:var(--text-main);">${p.customer_id}</td>
+                    <td style="font-family:var(--font-mono); font-weight:700;">${(p.churn_probability * 100).toFixed(1)}%</td>
+                    <td><span class="pill-table ${isHigh ? 'high' : 'low'}">${isHigh ? 'High Risk' : 'Low Risk'}</span></td>
+                    <td>${p.loyalty_tier}</td>
+                    <td>$${p.monetary_180d.toLocaleString()}</td>
+                    <td>${p.last_visit_days_ago} days ago</td>
+                    <td>${p.ticket_count_90d} tickets</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Table controls
+        function filterBatchRows(type) {
+            batchFilter = type;
+            renderBatchTable();
+        }
+
+        // Table search filter
+        function filterBatchTable() {
+            renderBatchTable();
+        }
+
+        // CSV export predictions exporter
+        function exportPredictionsCSV() {
+            if (batchPredictions.length === 0) return;
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "customer_id,churn_probability,risk_level,risk_explanation\n";
+
+            batchPredictions.forEach(p => {
+                const isHigh = p.churn_probability >= currentThreshold;
+                const level = isHigh ? "high" : "low";
+                const exp = isHigh ? "High risk of churn. Priority intervention required." : "Low risk of churn. Monitor routinely.";
+                csvContent += `"${p.customer_id}",${p.churn_probability},"${level}","${exp}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `churn_predictions_threshold_${currentThreshold.toFixed(2)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // ==========================================
+        // SIMULATION / THRESHOLD SANDBOX JS
+        // ==========================================
+        
+        function adjustThreshold(slider) {
+            const val = parseFloat(slider.value);
+            currentThreshold = val;
+            
+            // Update UI elements
+            document.getElementById('sim-threshold-display').textContent = val.toFixed(2);
+
+            // If a single prediction was loaded, re-evaluate visual flags
+            const riskPill = document.getElementById('result-risk-badge');
+            if (riskPill && document.getElementById('results-display-card').style.display !== 'none') {
+                const probText = document.getElementById('result-probability').textContent;
+                const prob = parseFloat(probText) / 100;
+                
+                const isHighRisk = prob >= currentThreshold;
+                riskPill.textContent = isHighRisk ? "High Risk" : "Low Risk";
+                riskPill.className = `risk-badge ${isHighRisk ? 'high' : 'low'}`;
+                
+                const riskCard = document.getElementById('risk-alert-card');
+                riskCard.className = `risk-alert-card ${isHighRisk ? 'high-risk' : 'low-risk'}`;
+                
+                const riskExp = document.getElementById('result-risk-explanation');
+                if (isHighRisk) {
+                    riskExp.textContent = "High risk of churn detected. Decision threshold set at " + currentThreshold.toFixed(2) + ". Directing to CRM intervention pipeline.";
+                } else {
+                    riskExp.textContent = "Low risk of churn. Monitor behavior. Automatic marketing filters remain inactive.";
+                }
+            }
+
+            // Sync with Batch table and KPIs if present
+            if (batchPredictions.length > 0) {
+                updateBatchStats();
+                renderBatchTable();
+            }
+        }
+    </script>
+</body>
+</html>
