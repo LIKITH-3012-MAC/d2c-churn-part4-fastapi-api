@@ -1,9 +1,16 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 import pandas as pd
 import joblib
 import logging
 from typing import List
+
+try:
+    from app.ui import serve_ui
+except ModuleNotFoundError:
+    from ui import serve_ui
+
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -67,6 +74,10 @@ class PredictionResponse(BaseModel):
 
 class BatchPredictionResponse(BaseModel):
     predictions: List[PredictionResponse]
+
+@app.get("/", response_class=HTMLResponse)
+def read_ui():
+    return serve_ui()
 
 @app.get("/health")
 def health_check():

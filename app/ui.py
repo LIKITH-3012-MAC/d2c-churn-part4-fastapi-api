@@ -1,18 +1,8 @@
-import sys
 from pathlib import Path
-from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 
-# Import the original app instance robustly from app.main or main
-try:
-    from app.main import app
-except ModuleNotFoundError:
-    from main import app
-
-# Define path to frontend UI file (sibling directory 'static/')
 FRONTEND_PATH = Path(__file__).resolve().parent / "static" / "index.html"
 
-@app.get("/", response_class=HTMLResponse)
 def serve_ui():
     if not FRONTEND_PATH.exists():
         return HTMLResponse(
